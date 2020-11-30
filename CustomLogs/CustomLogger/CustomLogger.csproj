@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ICustomLogger.cs" />
+    <Compile Include="CustomLogger.cs" />
+    <Compile Include="LoggerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sinks\FileSink.cs" />
     <Compile Include="Sinks\ISink.cs" />
   </ItemGroup>
   <ItemGroup>

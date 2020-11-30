@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CustomLogs;
+using CustomLogs.Sinks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,10 @@ namespace LoggerDemo
     {
         static void Main(string[] args)
         {
+            const string ProgramName = nameof(LoggerDemo);
+
+            var loggerFactory = new LoggerFactory();
+            var logger = loggerFactory.Create(new ISink[] { new FileSink() }, ProgramName);
         }
     }
 }
