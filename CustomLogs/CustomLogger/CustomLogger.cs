@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace CustomLogs
 {
-    public interface ICustomLogger
+    public interface ICustomLogger : IDisposable
     {
         void Start();
         void Log(string message, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
@@ -34,6 +34,18 @@ namespace CustomLogs
         public void Log(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            foreach (var sink in _sinks)
+            {
+                try
+                {
+                    sink.Dispose();
+                }
+                finally { }
+            }
         }
     }
 }
