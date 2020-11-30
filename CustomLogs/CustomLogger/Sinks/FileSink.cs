@@ -3,8 +3,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CustomLogs.Sinks
@@ -29,7 +27,7 @@ namespace CustomLogs.Sinks
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Flush();
         }
 
         public void Enable(string programName, string userName, int delayMs)
@@ -66,12 +64,29 @@ namespace CustomLogs.Sinks
 
         private void WriteLog()
         {
-            throw new NotImplementedException();
+            List<string> totalLines = new List<string>();
+
+
+            while (LogQueue.Count > 0)
+            {
+                var result = LogQueue.TryDequeue(out string[] lines);
+
+                if (!result)
+                    break;
+
+                totalLines.AddRange(lines);
+            }
+
+            if (totalLines.Count == 0)
+                return;
+
+            File.AppendAllLines(_filePath, totalLines);
         }
 
         public void Flush()
         {
-            throw new NotImplementedException();
+            if (Directory.Exists(_rootDirectory))
+                WriteLog();
         }
     }
 }
