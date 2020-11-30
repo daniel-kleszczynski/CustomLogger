@@ -10,7 +10,7 @@ namespace CustomLogs.Sinks
     public interface ISink : IDisposable
     {
         ConcurrentQueue<string[]> LogQueue { get; }
-        void Enable(string programName, string userName, int delayedSeconds);
+        void Enable(string programName, string userName, int delayMs);
         void Flush();
     }
 }

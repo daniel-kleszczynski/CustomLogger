@@ -1,4 +1,5 @@
 ﻿using CustomLogs.Sinks;
+using CustomLogs.Utils.FileSink;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -28,7 +29,14 @@ namespace CustomLogs
 
         public void Start()
         {
-            throw new NotImplementedException();
+            foreach (var sink in _sinks)
+            {
+                try
+                {
+                    sink.Enable(_programName, _userName, _delayMs);
+                }
+                finally { }
+            }
         }
 
         public void Log(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
