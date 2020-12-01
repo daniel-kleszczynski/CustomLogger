@@ -9,6 +9,8 @@ namespace CustomLogs.Sinks
 {
     public class FileSink : ISink
     {
+        private const string StatusOk = "[OK]";
+
         private string _rootDirectory;
         private readonly IFilePathBuilder _filePathBuilder;
         private string _filePath;
@@ -19,7 +21,7 @@ namespace CustomLogs.Sinks
             _filePathBuilder = filePathBuilder;
         }
 
-        public ConcurrentQueue<string[]> LogQueue => throw new NotImplementedException();
+        public ConcurrentQueue<string[]> LogQueue { get; } = new ConcurrentQueue<string[]>();
 
         public void Dispose()
         {
@@ -83,6 +85,15 @@ namespace CustomLogs.Sinks
         {
             if (Directory.Exists(_rootDirectory))
                 WriteLog();
+        }
+
+        public void Log(string message, string path, string callerName, int callerLine)
+        {
+            var time = DateTime.Now.ToString("HH:mm:ss");
+            var inCodeLocation = $"{{  + {callerName} + (linia: {callerLine}) }})";
+            var header = $"{StatusOk} {time} {path} {inCodeLocation}";
+
+            LogQueue.Enqueue(new string[] { header, message });
         }
     }
 }

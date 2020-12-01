@@ -14,6 +14,16 @@ namespace LoggerDemo
     {
         static void Main(string[] args)
         {
+            var logger = ConfigureLogger();
+            logger.Log("test message");
+
+            Thread.Sleep(500);
+
+            Console.ReadKey();
+        }
+
+        private static ICustomLogger ConfigureLogger()
+        {
             const string ProgramName = nameof(LoggerDemo);
             const string LoggerPath = @"D:\Logs";
 
@@ -22,11 +32,10 @@ namespace LoggerDemo
 
             var loggerFactory = new LoggerFactory();
             var logger = loggerFactory.Create(new ISink[] { sink }, ProgramName);
+
             logger.Start();
 
-            Thread.Sleep(500);
-
-            Console.ReadKey();
+            return logger;
         }
     }
 }

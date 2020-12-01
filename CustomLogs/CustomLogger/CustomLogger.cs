@@ -41,7 +41,14 @@ namespace CustomLogs
 
         public void Log(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
         {
-            throw new NotImplementedException();
+            foreach (var sink in _sinks)
+            {
+                try
+                {
+                    sink.Log(message, callerPath, callerName, callerLine);
+                }
+                finally { }
+            }
         }
 
         public void Dispose()
