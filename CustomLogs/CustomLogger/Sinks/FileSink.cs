@@ -11,17 +11,18 @@ namespace CustomLogs.Sinks
     {
         private const string StatusOk = "[OK]";
 
-        private string _rootDirectory;
-        private readonly IFilePathBuilder _filePathBuilder;
+        private readonly string _rootDirectory;
         private string _filePath;
+
+        private readonly IFilePathBuilder _filePathBuilder;
+
+        private ConcurrentQueue<string[]> _logQueue { get; } = new ConcurrentQueue<string[]>();
 
         internal FileSink(string rootDirectory, FilePathBuilder filePathBuilder)
         {
             _rootDirectory = rootDirectory;
             _filePathBuilder = filePathBuilder;
         }
-
-        public ConcurrentQueue<string[]> LogQueue { get; } = new ConcurrentQueue<string[]>();
 
         public void Dispose()
         {
@@ -45,6 +46,21 @@ namespace CustomLogs.Sinks
             var task = Task.Run(() => InitializeWritingToFile(delayMs));
         }
 
+        public void Flush()
+        {
+            if (Directory.Exists(_rootDirectory))
+                WriteLog();
+        }
+
+        public void Log(string message, string path, string callerName, int callerLine)
+        {
+            var time = DateTime.Now.ToString("HH:mm:ss");
+            var inCodeLocation = $"{{  + {callerName} + (linia: {callerLine}) }})";
+            var header = $"{StatusOk} {time} {path} {inCodeLocation}";
+
+            _logQueue.Enqueue(new string[] { header, message });
+        }
+
         private async Task<int> InitializeWritingToFile(int delayMs)
         {
 
@@ -65,9 +81,9 @@ namespace CustomLogs.Sinks
             List<string> totalLines = new List<string>();
 
 
-            while (LogQueue.Count > 0)
+            while (_logQueue.Count > 0)
             {
-                var result = LogQueue.TryDequeue(out string[] lines);
+                var result = _logQueue.TryDequeue(out string[] lines);
 
                 if (!result)
                     break;
@@ -79,21 +95,6 @@ namespace CustomLogs.Sinks
                 return;
 
             File.AppendAllLines(_filePath, totalLines);
-        }
-
-        public void Flush()
-        {
-            if (Directory.Exists(_rootDirectory))
-                WriteLog();
-        }
-
-        public void Log(string message, string path, string callerName, int callerLine)
-        {
-            var time = DateTime.Now.ToString("HH:mm:ss");
-            var inCodeLocation = $"{{  + {callerName} + (linia: {callerLine}) }})";
-            var header = $"{StatusOk} {time} {path} {inCodeLocation}";
-
-            LogQueue.Enqueue(new string[] { header, message });
         }
     }
 }
