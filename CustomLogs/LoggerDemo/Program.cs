@@ -17,6 +17,9 @@ namespace LoggerDemo
             var logger = ConfigureLogger();
             logger.Log("test message");
 
+            int x = 7;
+            logger.LogData(nameof(x), x);
+
             Thread.Sleep(500);
 
             Console.ReadKey();

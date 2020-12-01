@@ -60,5 +60,19 @@ namespace CustomLogs.Sinks
 
             _logQueue.Enqueue(new string[] { header, message });
         }
+
+        public void LogData(string paramName, object paramValue, string path, string callerName, int callerLine)
+        {
+            var time = DateTime.Now.ToString("HH:mm:ss");
+            var inCodeLocation = $"{{  + {callerName} + (linia: {callerLine}) }})";
+            var header = $"{StatusOk} {time} {path} {inCodeLocation}";
+            var content = "     Data: ";
+
+            var value = paramValue != null ? paramValue : "NULL";
+            value = value.Equals(string.Empty) ? "\"\"" : value;
+            content += $"[{paramName}] = {value} ";
+
+            _logQueue.Enqueue(new string[] { header, content });
+        }
     }
 }

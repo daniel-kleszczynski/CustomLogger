@@ -9,6 +9,7 @@ namespace CustomLogs
     {
         void Start();
         void Log(string message, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
+        void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
     }
 
     public class CustomLogger : ICustomLogger
@@ -49,6 +50,16 @@ namespace CustomLogs
                 }
                 finally { }
             }
+        }
+
+        public void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1)
+        {
+            try
+            {
+                foreach (var sink in _sinks)
+                    sink.LogData(paramName, paramValue, callerPath, callerName, callerLine);
+            }
+            finally { }
         }
 
         public void Dispose()
