@@ -1,21 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace CustomLogs.Utils.FileSink
 {
     public interface IFilePathBuilder
     {
-        string Build(string directoryPath, string userName);
+        string Build(string directoryPath, string programName, string userName);
     }
 
     public class FilePathBuilder : IFilePathBuilder
     {
-        public string Build(string directoryPath, string userName)
+        public string Build(string directoryPath, string programName, string userName)
         {
-            throw new NotImplementedException();
+            var dateString = DateTime.Now.ToString("yyyy-MM-dd");
+            var fileName = programName;
+
+            if (!string.IsNullOrEmpty(userName))
+                fileName += '_' + userName;
+
+            fileName += $"_{dateString}.txt";
+
+            return Path.Combine(directoryPath, fileName);
         }
     }
 }

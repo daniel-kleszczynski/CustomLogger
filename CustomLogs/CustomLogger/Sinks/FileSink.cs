@@ -10,16 +10,12 @@ namespace CustomLogs.Sinks
     public class FileSink : ISink
     {
         private string _rootDirectory;
-        private readonly IDirectoryPathBuilder _directoryPathBuilder;
         private readonly IFilePathBuilder _filePathBuilder;
         private string _filePath;
 
-        internal FileSink(string rootDirectory, 
-                          IDirectoryPathBuilder directoryPathBuilder,
-                          IFilePathBuilder filePathBuilder)
+        internal FileSink(string rootDirectory, FilePathBuilder filePathBuilder)
         {
             _rootDirectory = rootDirectory;
-            _directoryPathBuilder = directoryPathBuilder;
             _filePathBuilder = filePathBuilder;
         }
 
@@ -37,8 +33,8 @@ namespace CustomLogs.Sinks
                 if (!Directory.Exists(_rootDirectory))
                     return;
 
-                var directoryPath = _directoryPathBuilder.Build(_rootDirectory, programName);
-                _filePath = _filePathBuilder.Build(directoryPath, userName);
+                var directoryPath = Path.Combine(_rootDirectory, programName);
+                _filePath = _filePathBuilder.Build(directoryPath, programName, userName);
 
                 Directory.CreateDirectory(directoryPath);
             }
