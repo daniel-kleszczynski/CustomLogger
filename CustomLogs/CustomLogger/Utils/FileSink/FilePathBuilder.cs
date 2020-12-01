@@ -8,7 +8,7 @@ namespace CustomLogs.Utils.FileSink
         string Build(string directoryPath, string programName, string userName);
     }
 
-    public class FilePathBuilder : IFilePathBuilder
+    internal class FilePathBuilder : IFilePathBuilder
     {
         public string Build(string directoryPath, string programName, string userName)
         {

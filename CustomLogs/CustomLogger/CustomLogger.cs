@@ -33,7 +33,7 @@ namespace CustomLogs
             {
                 try
                 {
-                    sink.Enable(_programName, _userName, _delayMs);
+                    sink.Setup(_programName, _userName, _delayMs);
                 }
                 finally { }
             }
