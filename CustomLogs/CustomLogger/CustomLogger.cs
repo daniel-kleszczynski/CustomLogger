@@ -1,5 +1,5 @@
-﻿using CustomLogs.Sinks;
-using CustomLogs.Utils.FileSink;
+﻿using CustomLogs.Models;
+using CustomLogs.Sinks;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -42,11 +42,13 @@ namespace CustomLogs
 
         public void Log(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
         {
+            var model = new LogInfo(message, callerPath, callerName, callerLine);
+
             foreach (var sink in _sinks)
             {
                 try
                 {
-                    sink.Log(message, callerPath, callerName, callerLine);
+                    sink.Log(model);
                 }
                 finally { }
             }
@@ -54,12 +56,16 @@ namespace CustomLogs
 
         public void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1)
         {
-            try
+            var model = new LogDataInfo(paramName, paramValue, callerPath, callerName, callerLine);
+
+            foreach (var sink in _sinks)
             {
-                foreach (var sink in _sinks)
-                    sink.LogData(paramName, paramValue, callerPath, callerName, callerLine);
+                try
+                {
+                    sink.LogData(model);
+                }
+                finally { }
             }
-            finally { }
         }
 
         public void Dispose()

@@ -1,4 +1,5 @@
-﻿using CustomLogs.Utils.FileSink;
+﻿using CustomLogs.Models;
+using CustomLogs.Utils.FileSink;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -52,25 +53,25 @@ namespace CustomLogs.Sinks
                 _fileWriter.WriteLog(_logQueue, _filePath);
         }
 
-        public void Log(string message, string path, string callerName, int callerLine)
+        public void Log(LogInfo logModel)
         {
             var time = DateTime.Now.ToString("HH:mm:ss");
-            var inCodeLocation = $"{{  + {callerName} + (linia: {callerLine}) }})";
-            var header = $"{StatusOk} {time} {path} {inCodeLocation}";
+            var inCodeLocation = $"{{  + {logModel.CallerName} + (linia: {logModel.CallerLine}) }})";
+            var header = $"{StatusOk} {time} {logModel.Path} {inCodeLocation}";
 
-            _logQueue.Enqueue(new string[] { header, message });
+            _logQueue.Enqueue(new string[] { header, logModel.Message });
         }
 
-        public void LogData(string paramName, object paramValue, string path, string callerName, int callerLine)
+        public void LogData(LogDataInfo logModel)
         {
             var time = DateTime.Now.ToString("HH:mm:ss");
-            var inCodeLocation = $"{{  + {callerName} + (linia: {callerLine}) }})";
-            var header = $"{StatusOk} {time} {path} {inCodeLocation}";
+            var inCodeLocation = $"{{  + {logModel.CallerName} + (linia: {logModel.CallerLine}) }})";
+            var header = $"{StatusOk} {time} {logModel.Path} {inCodeLocation}";
             var content = "     Data: ";
 
-            var value = paramValue != null ? paramValue : "NULL";
+            var value = logModel.ParamValue != null ? logModel.ParamValue : "NULL";
             value = value.Equals(string.Empty) ? "\"\"" : value;
-            content += $"[{paramName}] = {value} ";
+            content += $"[{logModel.ParamName}] = {value} ";
 
             _logQueue.Enqueue(new string[] { header, content });
         }
