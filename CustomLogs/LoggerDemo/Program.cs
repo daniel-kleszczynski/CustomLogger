@@ -1,14 +1,4 @@
-﻿using CustomLogs;
-using CustomLogs.Models;
-using CustomLogs.Sinks;
-using CustomLogs.Sinks.Factories;
-using CustomLogs.Utils.FileSink;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace LoggerDemo
 {
@@ -26,6 +16,7 @@ namespace LoggerDemo
                 presenter.LogDataSetDemo(logger);
                 presenter.LogCollectionDemo(logger);
                 presenter.LogExceptionDemo(logger);
+                presenter.LogErrorDemo(logger);
             }
 
             Console.ReadKey();

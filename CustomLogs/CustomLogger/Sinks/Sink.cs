@@ -13,6 +13,6 @@ namespace CustomLogs.Sinks
         internal abstract void LogDataSet(LogDataSetInfo logModel);
         internal abstract void LogCollection<TItem>(LogCollectionInfo<TItem> logModel);
         internal abstract void LogException<TException>(LogExceptionInfo<TException> logModel) where TException : Exception;
-
+        internal abstract void LogError(LogInfo logModel);
     }
 }

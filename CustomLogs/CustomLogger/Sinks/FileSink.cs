@@ -96,5 +96,11 @@ namespace CustomLogs.Sinks
 
             _logQueue.Enqueue(combineArray);
         }
+
+        internal override void LogError(LogInfo logModel)
+        {
+            var header = _logFormatter.FormatHeader(logModel, LogStatus.ERROR);
+            _logQueue.Enqueue(new string[] { header, logModel.Message });
+        }
     }
 }

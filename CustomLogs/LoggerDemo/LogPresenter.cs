@@ -55,5 +55,10 @@ namespace LoggerDemo
                 logger.LogException(ex);
             }
         }
+
+        public void LogErrorDemo(ICustomLogger logger)
+        {
+            logger.LogError(@"You typed incorrect number");
+        }
     }
 }

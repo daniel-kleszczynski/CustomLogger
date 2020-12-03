@@ -14,7 +14,7 @@ namespace CustomLogs
         void LogDataSet(DataInfo[] dataArray, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1);
         void LogCollection<TItem>(string collectionName, IEnumerable<TItem> collection, Func<TItem, DataInfo> selector, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
         void LogException<T>(T ex, bool isCatched = true) where T : Exception;
-
+        void LogError(string message, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
     }
 
     public class CustomLogger : ICustomLogger
@@ -110,6 +110,20 @@ namespace CustomLogs
                 try
                 {
                     sink.LogException(model);
+                }
+                finally { }
+            }
+        }
+
+        public void LogError(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
+        {
+            var model = new LogInfo(message, callerPath, callerName, callerLine);
+
+            foreach (var sink in _sinks)
+            {
+                try
+                {
+                    sink.LogError(model);
                 }
                 finally { }
             }
