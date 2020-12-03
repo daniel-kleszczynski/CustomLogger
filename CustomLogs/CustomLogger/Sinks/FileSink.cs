@@ -1,4 +1,5 @@
 ﻿using CustomLogs.Models;
+using CustomLogs.Enums;
 using CustomLogs.Utils.FileSink;
 using System.Collections.Concurrent;
 using System.IO;
@@ -57,13 +58,13 @@ namespace CustomLogs.Sinks
 
         internal override void Log(LogInfo logModel)
         {
-            var header = _logFormatter.FormatHeader(logModel);
+            var header = _logFormatter.FormatHeader(logModel, LogStatus.OK);
             _logQueue.Enqueue(new string[] { header, logModel.Message });
         }
 
         internal override void LogData(LogDataInfo logModel)
         {
-            var header = _logFormatter.FormatHeader(logModel);
+            var header = _logFormatter.FormatHeader(logModel, LogStatus.OK);
             var content = "     Data: ";
 
             var value = logModel.ParamValue != null ? logModel.ParamValue : "NULL";

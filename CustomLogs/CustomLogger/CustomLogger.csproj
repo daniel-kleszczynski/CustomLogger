@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="CustomLogger.cs" />
     <Compile Include="LoggerFactory.cs" />
+    <Compile Include="Enums\LogStatus.cs" />
     <Compile Include="Models\LogDataInfo.cs" />
     <Compile Include="Models\LogWithHeader.cs" />
     <Compile Include="Models\LogInfo.cs" />
