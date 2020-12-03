@@ -10,22 +10,22 @@ namespace CustomLogs
         private static readonly object _padlock = new object();
         private static CustomLogger _instance;
 
-        public ICustomLogger Create(ISink[] sinks, string programName)
+        public ICustomLogger Create(Sink[] sinks, string programName)
         {
             return Create(sinks, programName, NoUser, DefaultDelayMs);
         }
 
-        public ICustomLogger Create(ISink[] sinks, string programName, string userName)
+        public ICustomLogger Create(Sink[] sinks, string programName, string userName)
         {
             return Create(sinks, programName, userName, DefaultDelayMs);
         }
 
-        public ICustomLogger Create(ISink[] sinks, string programName, int delayMs)
+        public ICustomLogger Create(Sink[] sinks, string programName, int delayMs)
         {
             return Create(sinks, programName, NoUser, delayMs);
         }
 
-        public ICustomLogger Create(ISink[] sinks, string programName, string userName, int delayMs)
+        public ICustomLogger Create(Sink[] sinks, string programName, string userName, int delayMs)
         {
             lock (_padlock)
             {

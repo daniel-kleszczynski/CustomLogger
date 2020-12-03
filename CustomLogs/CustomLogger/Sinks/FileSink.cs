@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CustomLogs.Sinks
 {
-    public class FileSink : ISink
+    public class FileSink : Sink
     {
         private const string StatusOk = "[OK]";
 
@@ -25,12 +25,12 @@ namespace CustomLogs.Sinks
             _fileWriter = fileWriter;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Flush();
         }
 
-        public void Setup(string programName, string userName, int delayMs)
+        internal override void Setup(string programName, string userName, int delayMs)
         {
             try
             {
@@ -47,13 +47,13 @@ namespace CustomLogs.Sinks
             _fileWriter.Start(_logQueue, _filePath, delayMs);
         }
 
-        public void Flush()
+        internal override void Flush()
         {
             if (Directory.Exists(_rootDirectory))
                 _fileWriter.WriteLog(_logQueue, _filePath);
         }
 
-        public void Log(LogInfo logModel)
+        internal override void Log(LogInfo logModel)
         {
             var time = DateTime.Now.ToString("HH:mm:ss");
             var inCodeLocation = $"{{  + {logModel.CallerName} + (linia: {logModel.CallerLine}) }})";
@@ -62,7 +62,7 @@ namespace CustomLogs.Sinks
             _logQueue.Enqueue(new string[] { header, logModel.Message });
         }
 
-        public void LogData(LogDataInfo logModel)
+        internal override void LogData(LogDataInfo logModel)
         {
             var time = DateTime.Now.ToString("HH:mm:ss");
             var inCodeLocation = $"{{  + {logModel.CallerName} + (linia: {logModel.CallerLine}) }})";

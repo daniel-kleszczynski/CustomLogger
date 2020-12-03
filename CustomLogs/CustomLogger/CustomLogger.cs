@@ -18,9 +18,9 @@ namespace CustomLogs
         private int _delayMs;
         private string _userName;
         private string _programName;
-        private ISink[] _sinks;
+        private Sink[] _sinks;
 
-        internal CustomLogger(ISink[] sinks, string programName, string userName, int delayMs)
+        internal CustomLogger(Sink[] sinks, string programName, string userName, int delayMs)
         {
             _sinks = sinks;
             _programName = programName;

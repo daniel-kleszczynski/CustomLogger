@@ -1,8 +1,8 @@
 ﻿namespace CustomLogs.Models
 {
-    public class LogDataInfo
+    internal class LogDataInfo
     {
-        public LogDataInfo(string paramName, object paramValue, string path, string callerName, int callerLine)
+        internal LogDataInfo(string paramName, object paramValue, string path, string callerName, int callerLine)
         {
             ParamName = paramName;
             ParamValue = paramValue;
@@ -11,10 +11,10 @@
             CallerLine = callerLine;
         }
 
-        public string ParamName { get; private set; }
-        public object ParamValue { get; private set; }
-        public string Path { get; private set; }
-        public string CallerName { get; private set; }
-        public int CallerLine { get; private set; }
+        internal string ParamName { get; private set; }
+        internal object ParamValue { get; private set; }
+        internal string Path { get; private set; }
+        internal string CallerName { get; private set; }
+        internal int CallerLine { get; private set; }
     }
 }

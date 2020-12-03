@@ -1,8 +1,8 @@
 ﻿namespace CustomLogs.Models
 {
-    public class LogInfo
+    internal class LogInfo
     {
-        public LogInfo(string message, string path, string callerName, int callerLine)
+        internal LogInfo(string message, string path, string callerName, int callerLine)
         {
             Message = message;
             Path = path;
@@ -10,9 +10,9 @@
             CallerLine = callerLine;
         }
 
-        public string Message { get; private set; }
-        public string Path { get; private set; }
-        public string CallerName { get; private set; }
-        public int CallerLine { get; private set; }
+        internal string Message { get; private set; }
+        internal string Path { get; private set; }
+        internal string CallerName { get; private set; }
+        internal int CallerLine { get; private set; }
     }
 }

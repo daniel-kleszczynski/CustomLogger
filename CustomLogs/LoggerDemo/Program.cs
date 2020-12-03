@@ -1,6 +1,8 @@
 ﻿using CustomLogs;
+using CustomLogs.Models;
 using CustomLogs.Sinks;
 using CustomLogs.Sinks.Factories;
+using CustomLogs.Utils.FileSink;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +36,7 @@ namespace LoggerDemo
             var sink = sinkFactory.Create(LoggerPath);
 
             var loggerFactory = new LoggerFactory();
-            var logger = loggerFactory.Create(new ISink[] { sink }, ProgramName);
+            var logger = loggerFactory.Create(new Sink[] { sink }, ProgramName);
 
             logger.Start();
 
