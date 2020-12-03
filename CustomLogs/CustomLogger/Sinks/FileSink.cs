@@ -4,6 +4,7 @@ using CustomLogs.Utils.FileSink;
 using System.Collections.Concurrent;
 using System.IO;
 using System;
+using System.Linq;
 
 namespace CustomLogs.Sinks
 {
@@ -85,6 +86,15 @@ namespace CustomLogs.Sinks
             var content = _logFormatter.FormatLogCollection(logModel);
 
             _logQueue.Enqueue(new string[] { header, content });
+        }
+
+        internal override void LogException<TException>(LogExceptionInfo<TException> logModel)
+        {
+            var header = _logFormatter.FormatExceptionHeader(logModel);
+            var contentArray = _logFormatter.FormatLogException(logModel);
+            var combineArray = (new string[] { header }).Concat(contentArray).ToArray();
+
+            _logQueue.Enqueue(combineArray);
         }
     }
 }

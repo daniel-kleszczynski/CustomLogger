@@ -46,5 +46,18 @@ namespace LoggerDemo
 
             logger.LogCollection(nameof(models), models, i => new DataInfo($"{nameof(i.Name)}", $"{i.Name}"));
         }
+
+        public void LogExceptionDemo(ICustomLogger logger)
+        {
+            try
+            {
+                Exception innerException = new Exception("Example Inner exception");
+                throw new InvalidOperationException("Operation is not permitted.", innerException);
+            }
+            catch (InvalidOperationException ex)
+            {
+                logger.LogException(ex);
+            }
+        }
     }
 }

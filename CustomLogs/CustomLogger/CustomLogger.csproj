@@ -48,6 +48,7 @@
     <Compile Include="Models\LogCollectionInfo.cs" />
     <Compile Include="Models\LogDataInfo.cs" />
     <Compile Include="Models\LogDataSetInfo.cs" />
+    <Compile Include="Models\LogExceptionInfo.cs" />
     <Compile Include="Models\LogWithHeader.cs" />
     <Compile Include="Models\LogInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

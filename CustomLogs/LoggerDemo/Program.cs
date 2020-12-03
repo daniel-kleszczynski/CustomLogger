@@ -25,6 +25,7 @@ namespace LoggerDemo
                 presenter.LogDataDemo(logger);
                 presenter.LogDataSet(logger);
                 presenter.LogCollection(logger);
+                presenter.LogExceptionDemo(logger);
             }
 
             Console.ReadKey();

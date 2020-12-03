@@ -13,6 +13,7 @@ namespace CustomLogs
         void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
         void LogDataSet(DataInfo[] dataArray, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1);
         void LogCollection<TItem>(string collectionName, IEnumerable<TItem> collection, Func<TItem, DataInfo> selector, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
+        void LogException<T>(T ex, bool isCatched = true) where T : Exception;
 
     }
 
@@ -95,6 +96,20 @@ namespace CustomLogs
                 try
                 {
                     sink.LogCollection(model);
+                }
+                finally { }
+            }
+        }
+
+        public void LogException<TException>(TException ex, bool isCatched = true) where TException : Exception
+        {
+            var model = new LogExceptionInfo<TException>(ex, isCatched);
+
+            foreach (var sink in _sinks)
+            {
+                try
+                {
+                    sink.LogException(model);
                 }
                 finally { }
             }

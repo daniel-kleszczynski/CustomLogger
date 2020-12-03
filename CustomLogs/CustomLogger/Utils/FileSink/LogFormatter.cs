@@ -11,9 +11,11 @@ namespace CustomLogs.Utils.FileSink
     internal interface ILogFormatter
     {
         string FormatHeader(LogWithHeader logModel, LogStatus logStatus);
+        string FormatExceptionHeader<TException>(LogExceptionInfo<TException> logModel) where TException : Exception;
         string FormatLogCollection<TItem>(LogCollectionInfo<TItem> logModel);
         string FormatLogData(LogDataInfo logModel);
         string FormatLogDataSet(LogDataSetInfo logModel);
+        string[] FormatLogException<TException>(LogExceptionInfo<TException> logModel) where TException : Exception;
     }
 
     internal class LogFormatter : ILogFormatter
@@ -29,6 +31,15 @@ namespace CustomLogs.Utils.FileSink
 
             return $"{status} {time} {{file: {fileName}, caller: {logModel.CallerName}," +
                     $" line: {logModel.CallerLine}}} in {logModel.Path}";
+        }
+
+        public string FormatExceptionHeader<TException>(LogExceptionInfo<TException> logModel) where TException : Exception
+        {
+            var time = DateTime.Now.ToString("HH:mm:ss");
+            var exceptionType = typeof(TException).Name;
+            var catchStatus = logModel.IsCatched ? "CATCHED" : "UNCATCHED";
+
+            return $"{StatusError} {time} ||{catchStatus}|| {exceptionType} : {logModel.Exception.Message}";
         }
 
         public string FormatLogData(LogDataInfo logModel)
@@ -74,6 +85,20 @@ namespace CustomLogs.Utils.FileSink
             }
 
             return content;
+        }
+
+        public string[] FormatLogException<TException>(LogExceptionInfo<TException> logModel) where TException : Exception
+        {
+            var stackTrace = $"  {logModel.Exception.StackTrace}";
+
+            if (logModel.Exception.InnerException == null)
+                return new string[] { stackTrace };
+            else
+            {
+                var innerEx = logModel.Exception.InnerException;
+                var innerHeader = $"     >>>  Inner: {innerEx.GetType().Name} : {innerEx.Message}";
+                return new string[] { stackTrace, innerHeader };
+            }
         }
 
         private string ExtractFileName(string filePath)
