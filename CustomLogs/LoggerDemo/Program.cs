@@ -23,8 +23,8 @@ namespace LoggerDemo
             {
                 presenter.SimpleLogDemo(logger);
                 presenter.LogDataDemo(logger);
-                presenter.LogDataSet(logger);
-                presenter.LogCollection(logger);
+                presenter.LogDataSetDemo(logger);
+                presenter.LogCollectionDemo(logger);
                 presenter.LogExceptionDemo(logger);
             }
 

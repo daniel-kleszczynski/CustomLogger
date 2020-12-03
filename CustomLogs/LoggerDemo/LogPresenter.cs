@@ -1,10 +1,6 @@
 ﻿using CustomLogs;
 using CustomLogs.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoggerDemo
 {
@@ -21,7 +17,7 @@ namespace LoggerDemo
             logger.LogData(nameof(x), x);
         }
 
-        public void LogDataSet(ICustomLogger logger)
+        public void LogDataSetDemo(ICustomLogger logger)
         {
             int number = 13;
             string name = "Tony";
@@ -33,7 +29,7 @@ namespace LoggerDemo
             });
         }
 
-        public void LogCollection(ICustomLogger logger)
+        public void LogCollectionDemo(ICustomLogger logger)
         {
             string[] colors = new string[] { "red", "green", "blue" };
             logger.LogCollection(nameof(colors), colors, c => new DataInfo(string.Empty, c));
