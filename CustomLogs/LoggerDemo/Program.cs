@@ -16,31 +16,18 @@ namespace LoggerDemo
     {
         static void Main(string[] args)
         {
-            var logger = ConfigureLogger();
-            logger.Log("test message");
-
-            int x = 7;
-            logger.LogData(nameof(x), x);
-
-            Thread.Sleep(500);
+            var bootstrapper = new Bootstrapper();
+            var presenter = new LogPresenter();
+            
+            using (var logger = bootstrapper.ConfigureLogger())
+            {
+                presenter.SimpleLogDemo(logger);
+                presenter.LogDataDemo(logger);
+            }
 
             Console.ReadKey();
         }
 
-        private static ICustomLogger ConfigureLogger()
-        {
-            const string ProgramName = nameof(LoggerDemo);
-            const string LoggerPath = @"D:\Logs";
-
-            var sinkFactory = new FileSinkFactory();
-            var sink = sinkFactory.Create(LoggerPath);
-
-            var loggerFactory = new LoggerFactory();
-            var logger = loggerFactory.Create(new Sink[] { sink }, ProgramName);
-
-            logger.Start();
-
-            return logger;
-        }
+        
     }
 }
