@@ -1,6 +1,5 @@
 ﻿using CustomLogs.Models;
 using CustomLogs.Utils.FileSink;
-using System;
 using System.Collections.Concurrent;
 using System.IO;
 
@@ -8,20 +7,23 @@ namespace CustomLogs.Sinks
 {
     public class FileSink : Sink
     {
-        private const string StatusOk = "[OK]";
-
         private readonly string _rootDirectory;
         private string _filePath;
 
         private readonly IFilePathBuilder _filePathBuilder;
+        private readonly ILogFormatter _logFormatter;
         private readonly IAsyncFileWriter _fileWriter;
 
         private ConcurrentQueue<string[]> _logQueue { get; } = new ConcurrentQueue<string[]>();
 
-        internal FileSink(string rootDirectory, IFilePathBuilder filePathBuilder, IAsyncFileWriter fileWriter)
+        internal FileSink(string rootDirectory, 
+                          IFilePathBuilder filePathBuilder,
+                          ILogFormatter logFormatter,
+                          IAsyncFileWriter fileWriter)
         {
             _rootDirectory = rootDirectory;
             _filePathBuilder = filePathBuilder;
+            _logFormatter = logFormatter;
             _fileWriter = fileWriter;
         }
 
@@ -55,18 +57,13 @@ namespace CustomLogs.Sinks
 
         internal override void Log(LogInfo logModel)
         {
-            var time = DateTime.Now.ToString("HH:mm:ss");
-            var inCodeLocation = $"{{  + {logModel.CallerName} + (linia: {logModel.CallerLine}) }})";
-            var header = $"{StatusOk} {time} {logModel.Path} {inCodeLocation}";
-
+            var header = _logFormatter.FormatHeader(logModel);
             _logQueue.Enqueue(new string[] { header, logModel.Message });
         }
 
         internal override void LogData(LogDataInfo logModel)
         {
-            var time = DateTime.Now.ToString("HH:mm:ss");
-            var inCodeLocation = $"{{  + {logModel.CallerName} + (linia: {logModel.CallerLine}) }})";
-            var header = $"{StatusOk} {time} {logModel.Path} {inCodeLocation}";
+            var header = _logFormatter.FormatHeader(logModel);
             var content = "     Data: ";
 
             var value = logModel.ParamValue != null ? logModel.ParamValue : "NULL";
