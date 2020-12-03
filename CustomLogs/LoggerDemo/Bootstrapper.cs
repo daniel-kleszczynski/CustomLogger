@@ -1,6 +1,7 @@
 ﻿using CustomLogs;
 using CustomLogs.Sinks;
 using CustomLogs.Sinks.Factories;
+using System.Configuration;
 
 namespace LoggerDemo
 {
@@ -9,10 +10,11 @@ namespace LoggerDemo
         public ICustomLogger ConfigureLogger()
         {
             const string ProgramName = nameof(LoggerDemo);
-            const string LoggerPath = @"D:\Logs";
+            
 
             var sinkFactory = new FileSinkFactory();
-            var sink = sinkFactory.Create(LoggerPath);
+            var loggerPath = ConfigurationManager.AppSettings["loggerRootPath"];
+            var sink = sinkFactory.Create(loggerPath);
 
             var loggerFactory = new LoggerFactory();
             var logger = loggerFactory.Create(new Sink[] { sink }, ProgramName);
