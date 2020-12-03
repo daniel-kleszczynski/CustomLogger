@@ -23,6 +23,7 @@ namespace LoggerDemo
             {
                 presenter.SimpleLogDemo(logger);
                 presenter.LogDataDemo(logger);
+                presenter.LogDataSet(logger);
             }
 
             Console.ReadKey();

@@ -10,6 +10,7 @@ namespace CustomLogs
         void Start();
         void Log(string message, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
         void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
+        void LogDataSet(DataInfo[] dataArray, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1);
     }
 
     public class CustomLogger : ICustomLogger
@@ -63,6 +64,20 @@ namespace CustomLogs
                 try
                 {
                     sink.LogData(model);
+                }
+                finally { }
+            }
+        }
+
+        public void LogDataSet(DataInfo[] dataArray, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1)
+        {
+            var model = new LogDataSetInfo(dataArray, callerPath, callerName, callerLine);
+
+            foreach (var sink in _sinks)
+            {
+                try
+                {
+                    sink.LogDataSet(model);
                 }
                 finally { }
             }

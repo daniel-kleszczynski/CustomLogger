@@ -10,5 +10,6 @@ namespace CustomLogs.Sinks
         internal abstract void Flush();
         internal abstract void Log(LogInfo logModel);
         internal abstract void LogData(LogDataInfo logModel);
+        internal abstract void LogDataSet(LogDataSetInfo logModel);
     }
 }

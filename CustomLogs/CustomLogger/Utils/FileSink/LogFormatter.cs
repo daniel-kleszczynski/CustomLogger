@@ -12,6 +12,7 @@ namespace CustomLogs.Utils.FileSink
     {
         string FormatHeader(LogWithHeader logModel, LogStatus logStatus);
         string FormatLogData(LogDataInfo logModel);
+        string FormatLogDataSet(LogDataSetInfo logModel);
     }
 
     internal class LogFormatter : ILogFormatter
@@ -36,6 +37,20 @@ namespace CustomLogs.Utils.FileSink
             var value = logModel.ParamValue != null ? logModel.ParamValue : "NULL";
             value = value.Equals(string.Empty) ? "\"\"" : value;
             content += $"[{logModel.ParamName}] = {value} ";
+
+            return content;
+        }
+
+        public string FormatLogDataSet(LogDataSetInfo logModel)
+        {
+            var content = "     Data: ";
+
+            foreach (var parameter in logModel.DataArray)
+            {
+                var value = parameter.Value != null ? parameter.Value : "NULL";
+                value = value.Equals(string.Empty) ? "\"\"" : value;
+                content += $"[{parameter.Name}] = {value} ";
+            }
 
             return content;
         }
