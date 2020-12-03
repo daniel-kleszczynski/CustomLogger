@@ -32,5 +32,19 @@ namespace LoggerDemo
                 new DataInfo(nameof(name), name)
             });
         }
+
+        public void LogCollection(ICustomLogger logger)
+        {
+            string[] colors = new string[] { "red", "green", "blue" };
+            logger.LogCollection(nameof(colors), colors, c => new DataInfo(string.Empty, c));
+
+            ExampleModel[] models = new ExampleModel[]
+            {
+                new ExampleModel {Age = 18, Name = "Adam"},
+                new ExampleModel {Age = 24, Name = "Sara"}
+            };
+
+            logger.LogCollection(nameof(models), models, i => new DataInfo($"{nameof(i.Name)}", $"{i.Name}"));
+        }
     }
 }

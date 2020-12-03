@@ -11,6 +11,7 @@ namespace CustomLogs.Utils.FileSink
     internal interface ILogFormatter
     {
         string FormatHeader(LogWithHeader logModel, LogStatus logStatus);
+        string FormatLogCollection<TItem>(LogCollectionInfo<TItem> logModel);
         string FormatLogData(LogDataInfo logModel);
         string FormatLogDataSet(LogDataSetInfo logModel);
     }
@@ -50,6 +51,26 @@ namespace CustomLogs.Utils.FileSink
                 var value = parameter.Value != null ? parameter.Value : "NULL";
                 value = value.Equals(string.Empty) ? "\"\"" : value;
                 content += $"[{parameter.Name}] = {value} ";
+            }
+
+            return content;
+        }
+
+        public string FormatLogCollection<TItem>(LogCollectionInfo<TItem> logModel)
+        {
+            int index = 0;
+            var content = $"     {logModel.CollectionName}[{logModel.Collection.Count()}]: ";
+
+            foreach (var item in logModel.Collection)
+            {
+                var propertyData = logModel.Selector(item);
+
+                var label = string.IsNullOrEmpty(propertyData.Name) ? $"[{index}]" : $"[{index}].{propertyData.Name}";
+                var value = propertyData.Value != null ? propertyData.Value : "NULL";
+                value = value.Equals(string.Empty) ? "\"\"" : value;
+                content += $"{label} = {value} ";
+
+                index++;
             }
 
             return content;

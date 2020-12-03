@@ -78,5 +78,13 @@ namespace CustomLogs.Sinks
 
             _logQueue.Enqueue(new string[] { header, content });
         }
+
+        internal override void LogCollection<TItem>(LogCollectionInfo<TItem> logModel)
+        {
+            var header = _logFormatter.FormatHeader(logModel, LogStatus.OK);
+            var content = _logFormatter.FormatLogCollection(logModel);
+
+            _logQueue.Enqueue(new string[] { header, content });
+        }
     }
 }

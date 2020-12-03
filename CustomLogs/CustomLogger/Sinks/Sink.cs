@@ -11,5 +11,7 @@ namespace CustomLogs.Sinks
         internal abstract void Log(LogInfo logModel);
         internal abstract void LogData(LogDataInfo logModel);
         internal abstract void LogDataSet(LogDataSetInfo logModel);
+        internal abstract void LogCollection<TItem>(LogCollectionInfo<TItem> logModel);
+
     }
 }

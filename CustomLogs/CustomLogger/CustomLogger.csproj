@@ -45,6 +45,7 @@
     <Compile Include="LoggerFactory.cs" />
     <Compile Include="Enums\LogStatus.cs" />
     <Compile Include="Models\DataInfo.cs" />
+    <Compile Include="Models\LogCollectionInfo.cs" />
     <Compile Include="Models\LogDataInfo.cs" />
     <Compile Include="Models\LogDataSetInfo.cs" />
     <Compile Include="Models\LogWithHeader.cs" />
