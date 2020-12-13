@@ -40,7 +40,12 @@ namespace CustomLogs.Utils.FileSink
             var exceptionType = typeof(TException).Name;
             var catchStatus = logModel.IsCatched ? "CATCHED" : "UNCATCHED";
 
-            return $"{StatusError} {time} ||{catchStatus}|| {exceptionType} : {logModel.Exception.Message}";
+            var errorHeader = string.IsNullOrWhiteSpace(logModel.UserName) ?
+                $"{StatusError} {time} ||{catchStatus}||"
+            :
+                $"{StatusError} {time} {{user: {logModel.UserName}}} ||{catchStatus}||";
+
+            return $"{errorHeader} {exceptionType} : {logModel.Exception.Message}";
         }
 
         public string FormatLogData(LogDataInfo logModel)
