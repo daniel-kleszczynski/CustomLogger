@@ -21,15 +21,13 @@ namespace CustomLogs
     {
 
         private int _delayMs;
-        private string _userName;
         private string _programName;
         private Sink[] _sinks;
 
-        internal CustomLogger(Sink[] sinks, string programName, string userName, int delayMs)
+        internal CustomLogger(Sink[] sinks, string programName, int delayMs)
         {
             _sinks = sinks;
             _programName = programName;
-            _userName = userName;
             _delayMs = delayMs;
         }
 
@@ -39,7 +37,7 @@ namespace CustomLogs
             {
                 try
                 {
-                    sink.Setup(_programName, _userName, _delayMs);
+                    sink.Setup(_programName, _delayMs);
                 }
                 finally { }
             }

@@ -5,18 +5,15 @@ namespace CustomLogs.Utils.FileSink
 {
     public interface IFilePathBuilder
     {
-        string Build(string directoryPath, string programName, string userName);
+        string Build(string directoryPath, string programName);
     }
 
     internal class FilePathBuilder : IFilePathBuilder
     {
-        public string Build(string directoryPath, string programName, string userName)
+        public string Build(string directoryPath, string programName)
         {
             var dateString = DateTime.Now.ToString("yyyy-MM-dd");
             var fileName = programName;
-
-            if (!string.IsNullOrEmpty(userName))
-                fileName += '_' + userName;
 
             fileName += $"_{dateString}.txt";
 

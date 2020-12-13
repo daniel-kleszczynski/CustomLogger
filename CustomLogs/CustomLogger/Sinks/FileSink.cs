@@ -35,7 +35,7 @@ namespace CustomLogs.Sinks
             Flush();
         }
 
-        internal override void Setup(string programName, string userName, int delayMs)
+        internal override void Setup(string programName, int delayMs)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace CustomLogs.Sinks
                     return;
 
                 var directoryPath = Path.Combine(_rootDirectory, programName);
-                _filePath = _filePathBuilder.Build(directoryPath, programName, userName);
+                _filePath = _filePathBuilder.Build(directoryPath, programName);
 
                 Directory.CreateDirectory(directoryPath);
             }
