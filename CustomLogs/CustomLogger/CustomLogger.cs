@@ -9,16 +9,23 @@ namespace CustomLogs
     public interface ICustomLogger : IDisposable
     {
         void Start();
-        void Log(string message, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
-        void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
-        void LogDataSet(DataInfo[] dataArray, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1);
-        void LogCollection<TItem>(string collectionName, IEnumerable<TItem> collection, Func<TItem, DataInfo> selector, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
+        void Log(string message, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void Log(string message, string userName, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogData(string paramName, object paramValue, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogData(string paramName, object paramValue, string userName, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogDataSet(DataInfo[] dataArray, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogDataSet(DataInfo[] dataArray, string userName, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogCollection<TItem>(string collectionName, IEnumerable<TItem> collection, Func<TItem, DataInfo> selector, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogCollection<TItem>(string collectionName, IEnumerable<TItem> collection, Func<TItem, DataInfo> selector, string userName, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
         void LogException<T>(T ex, bool isCatched = true) where T : Exception;
-        void LogError(string message, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1);
+        void LogException<T>(T ex, string userName, bool isCatched = true) where T : Exception;
+        void LogError(string message, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
+        void LogError(string message, string userName, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "");
     }
 
     public class CustomLogger : ICustomLogger
     {
+        private const string NoUser = null;
 
         private int _delayMs;
         private string _programName;
@@ -43,9 +50,21 @@ namespace CustomLogs
             }
         }
 
-        public void Log(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
+        public void Log(string message,
+                        [CallerLineNumber] int callerLine = -1,
+                        [CallerFilePath] string callerPath = "",
+                        [CallerMemberName] string callerName = "")
         {
-            var model = new LogInfo(message, callerPath, callerName, callerLine);
+            Log(message, NoUser, callerLine, callerPath, callerName);
+        }
+
+        public void Log(string message,
+                        string userName,
+                        [CallerLineNumber] int callerLine = -1,
+                        [CallerFilePath] string callerPath = "",
+                        [CallerMemberName] string callerName = "")
+        {
+            var model = new LogInfo(message, callerPath, callerName, callerLine, userName);
 
             foreach (var sink in _sinks)
             {
@@ -57,9 +76,23 @@ namespace CustomLogs
             }
         }
 
-        public void LogData(string paramName, object paramValue, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1)
+        public void LogData(string paramName,
+                            object paramValue,
+                           [CallerLineNumber] int callerLine = -1,
+                           [CallerFilePath] string callerPath = "",
+                           [CallerMemberName] string callerName = "")
         {
-            var model = new LogDataInfo(paramName, paramValue, callerPath, callerName, callerLine);
+            LogData(paramName, paramValue, NoUser, callerLine, callerPath, callerName);
+        }
+
+        public void LogData(string paramName,
+                            object paramValue,
+                            string userName,
+                            [CallerLineNumber] int callerLine = -1,
+                            [CallerFilePath] string callerPath = "",
+                            [CallerMemberName] string callerName = "")
+        {
+            var model = new LogDataInfo(paramName, paramValue, callerPath, callerName, callerLine, userName);
 
             foreach (var sink in _sinks)
             {
@@ -71,9 +104,21 @@ namespace CustomLogs
             }
         }
 
-        public void LogDataSet(DataInfo[] dataArray, [CallerFilePath]string callerPath = "", [CallerMemberName]string callerName = "", [CallerLineNumber]int callerLine = -1)
+        public void LogDataSet(DataInfo[] dataArray,
+                               [CallerLineNumber] int callerLine = -1,
+                               [CallerFilePath] string callerPath = "",
+                               [CallerMemberName] string callerName = "")
         {
-            var model = new LogDataSetInfo(dataArray, callerPath, callerName, callerLine);
+            LogDataSet(dataArray, NoUser, callerLine, callerPath, callerName);
+        }
+
+        public void LogDataSet(DataInfo[] dataArray,
+                               string userName,
+                               [CallerLineNumber] int callerLine = -1,
+                               [CallerFilePath] string callerPath = "",
+                               [CallerMemberName] string callerName = "")
+        {
+            var model = new LogDataSetInfo(dataArray, callerPath, callerName, callerLine, userName);
 
             foreach (var sink in _sinks)
             {
@@ -85,9 +130,26 @@ namespace CustomLogs
             }
         }
 
-        public void LogCollection<TItem>(string collectionName, IEnumerable<TItem> collection, Func<TItem, DataInfo> selector, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
+        public void LogCollection<TItem>(string collectionName,
+                                        IEnumerable<TItem> collection,
+                                        Func<TItem, DataInfo> selector,
+                                        [CallerLineNumber] int callerLine = -1,
+                                        [CallerFilePath] string callerPath = "",
+                                        [CallerMemberName] string callerName = "")
         {
-            var model = new LogCollectionInfo<TItem>(collectionName, collection, selector, callerPath, callerName, callerLine);
+            LogCollection(collectionName, collection, selector, NoUser, callerLine, callerPath, callerName);
+        }
+
+        public void LogCollection<TItem>(string collectionName,
+                                         IEnumerable<TItem> collection,
+                                         Func<TItem, DataInfo> selector,
+                                         string userName,
+                                         [CallerLineNumber] int callerLine = -1,
+                                         [CallerFilePath] string callerPath = "",
+                                         [CallerMemberName] string callerName = "")
+        {
+            var model = new LogCollectionInfo<TItem>(collectionName, collection, selector, userName, callerPath,
+                                                     callerName, callerLine);
 
             foreach (var sink in _sinks)
             {
@@ -101,7 +163,13 @@ namespace CustomLogs
 
         public void LogException<TException>(TException ex, bool isCatched = true) where TException : Exception
         {
-            var model = new LogExceptionInfo<TException>(ex, isCatched);
+            LogException(ex, NoUser, isCatched);
+        }
+
+        public void LogException<TException>(TException ex, string userName, bool isCatched = true)
+            where TException : Exception
+        {
+            var model = new LogExceptionInfo<TException>(ex, isCatched, userName);
 
             foreach (var sink in _sinks)
             {
@@ -113,9 +181,18 @@ namespace CustomLogs
             }
         }
 
-        public void LogError(string message, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "", [CallerLineNumber] int callerLine = -1)
+        public void LogError(string message, [CallerLineNumber] int callerLine = -1, [CallerFilePath] string callerPath = "", [CallerMemberName] string callerName = "")
         {
-            var model = new LogInfo(message, callerPath, callerName, callerLine);
+            LogError(message, NoUser, callerLine, callerPath, callerName);
+        }
+
+        public void LogError(string message,
+                             string userName,
+                             [CallerLineNumber] int callerLine = -1,
+                             [CallerFilePath] string callerPath = "",
+                             [CallerMemberName] string callerName = "")
+        {
+            var model = new LogInfo(message, callerPath, callerName, callerLine, userName);
 
             foreach (var sink in _sinks)
             {

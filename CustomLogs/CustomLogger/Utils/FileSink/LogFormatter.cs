@@ -1,10 +1,7 @@
 ﻿using CustomLogs.Enums;
 using CustomLogs.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomLogs.Utils.FileSink
 {
@@ -29,8 +26,12 @@ namespace CustomLogs.Utils.FileSink
             var fileName = ExtractFileName(logModel.Path);
             var status = logStatus == LogStatus.OK ? StatusOk : StatusError;
 
-            return $"{status} {time} {{file: {fileName}, caller: {logModel.CallerName}," +
-                    $" line: {logModel.CallerLine}}} in {logModel.Path}";
+            var location = string.IsNullOrWhiteSpace(logModel.UserName) ?
+                $"{{file: {fileName}, caller: {logModel.CallerName}, line: {logModel.CallerLine}}}"
+            :
+                $"{{user: {logModel.UserName}, file: {fileName}, caller: {logModel.CallerName}, line: {logModel.CallerLine}}}";
+
+            return $"{status} {time} {location} in {logModel.Path}";
         }
 
         public string FormatExceptionHeader<TException>(LogExceptionInfo<TException> logModel) where TException : Exception

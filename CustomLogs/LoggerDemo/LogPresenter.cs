@@ -6,15 +6,17 @@ namespace LoggerDemo
 {
     public class LogPresenter
     {
+        private const string User = "Lucky";
+
         public void SimpleLogDemo(ICustomLogger logger)
         {
-            logger.Log("Simple log example");
+            logger.Log("Simple log example", User);
         }
 
         public void LogDataDemo(ICustomLogger logger)
         {
             int x = 7;
-            logger.LogData(nameof(x), x);
+            logger.LogData(nameof(x), x, User);
         }
 
         public void LogDataSetDemo(ICustomLogger logger)
@@ -26,7 +28,7 @@ namespace LoggerDemo
             {
                 new DataInfo(nameof(number), number),
                 new DataInfo(nameof(name), name)
-            });
+            }, User);
         }
 
         public void LogCollectionDemo(ICustomLogger logger)
@@ -40,7 +42,7 @@ namespace LoggerDemo
                 new ExampleModel {Age = 24, Name = "Sara"}
             };
 
-            logger.LogCollection(nameof(models), models, i => new DataInfo($"{nameof(i.Name)}", $"{i.Name}"));
+            logger.LogCollection(nameof(models), models, i => new DataInfo($"{nameof(i.Name)}", $"{i.Name}"), User);
         }
 
         public void LogExceptionDemo(ICustomLogger logger)
@@ -52,13 +54,13 @@ namespace LoggerDemo
             }
             catch (InvalidOperationException ex)
             {
-                logger.LogException(ex);
+                logger.LogException(ex, User);
             }
         }
 
         public void LogErrorDemo(ICustomLogger logger)
         {
-            logger.LogError(@"You typed incorrect number");
+            logger.LogError(@"You typed incorrect number", User);
         }
     }
 }

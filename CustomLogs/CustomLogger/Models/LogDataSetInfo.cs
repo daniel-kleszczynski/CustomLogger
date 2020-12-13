@@ -2,8 +2,9 @@
 {
     public class LogDataSetInfo : LogWithHeader
     {
-        public LogDataSetInfo(DataInfo[] dataArray, string callerPath, string callerName, int callerLine)
-            : base(callerPath, callerName, callerLine)
+        public LogDataSetInfo(DataInfo[] dataArray, string callerPath, string callerName, int callerLine,
+                              string userName)
+            : base(callerPath, callerName, callerLine, userName)
         {
             DataArray = dataArray;
         }

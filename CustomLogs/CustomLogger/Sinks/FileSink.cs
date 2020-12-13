@@ -3,7 +3,6 @@ using CustomLogs.Enums;
 using CustomLogs.Utils.FileSink;
 using System.Collections.Concurrent;
 using System.IO;
-using System;
 using System.Linq;
 
 namespace CustomLogs.Sinks

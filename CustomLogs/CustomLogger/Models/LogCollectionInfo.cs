@@ -5,10 +5,10 @@ namespace CustomLogs.Models
 {
     public class LogCollectionInfo<TItem> : LogWithHeader
     {
-        public LogCollectionInfo(string collectionName, IEnumerable<TItem> collection, 
-                                 Func<TItem, DataInfo> selector, string path, string callerName, 
-                                 int callerLine)
-            : base(path, callerName, callerLine)
+        public LogCollectionInfo(string collectionName, IEnumerable<TItem> collection,
+                                Func<TItem, DataInfo> selector, string userName, string path, string callerName,
+                                int callerLine)
+           : base(path, callerName, callerLine, userName)
         {
             CollectionName = collectionName;
             Collection = collection;

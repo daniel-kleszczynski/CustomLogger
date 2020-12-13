@@ -4,7 +4,7 @@ namespace CustomLogs.Models
 {
     public class LogExceptionInfo<T> where T : Exception
     {
-        public LogExceptionInfo(T exception, bool isCatched)
+        public LogExceptionInfo(T exception, bool isCatched, string userName)
         {
             Exception = exception;
             IsCatched = isCatched;
