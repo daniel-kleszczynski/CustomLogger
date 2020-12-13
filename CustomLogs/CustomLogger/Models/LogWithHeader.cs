@@ -1,4 +1,5 @@
 ﻿using CustomLogs.Enums;
+using System;
 
 namespace CustomLogs.Models
 {
@@ -10,6 +11,7 @@ namespace CustomLogs.Models
             CallerName = callerName;
             CallerLine = callerLine;
             UserName = userName;
+            DateTime = DateTime.Now;
         }
 
         internal LogStatus LogStatus { get; private set; }
@@ -17,5 +19,6 @@ namespace CustomLogs.Models
         internal string CallerName { get; private set; }
         internal int CallerLine { get; private set; }
         internal string UserName { get; private set; }
+        internal DateTime DateTime { get; private set; }
     }
 }

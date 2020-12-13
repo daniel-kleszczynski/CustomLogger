@@ -22,7 +22,7 @@ namespace CustomLogs.Utils.FileSink
 
         public string FormatHeader(LogWithHeader logModel, LogStatus logStatus)
         {
-            var time = DateTime.Now.ToString("HH:mm:ss");
+            var time = logModel.DateTime.ToString("HH:mm:ss");
             var fileName = ExtractFileName(logModel.Path);
             var status = logStatus == LogStatus.OK ? StatusOk : StatusError;
 
@@ -36,7 +36,7 @@ namespace CustomLogs.Utils.FileSink
 
         public string FormatExceptionHeader<TException>(LogExceptionInfo<TException> logModel) where TException : Exception
         {
-            var time = DateTime.Now.ToString("HH:mm:ss");
+            var time =logModel.DateTime.ToString("HH:mm:ss");
             var exceptionType = typeof(TException).Name;
             var catchStatus = logModel.IsCatched ? "CATCHED" : "UNCATCHED";
 

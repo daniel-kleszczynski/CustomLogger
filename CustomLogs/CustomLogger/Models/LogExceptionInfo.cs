@@ -8,9 +8,11 @@ namespace CustomLogs.Models
         {
             Exception = exception;
             IsCatched = isCatched;
+            DateTime = DateTime.Now;
         }
 
         public T Exception { get; private set; }
         public bool IsCatched { get; private set; }
+        public DateTime DateTime { get; private set; }
     }
 }
