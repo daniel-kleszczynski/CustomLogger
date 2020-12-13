@@ -30,7 +30,7 @@ namespace CustomLogs
             lock (_padlock)
             {
                 if (_instance == null)
-                    _instance = new CustomLogger(sinks, programName, userName, delayMs);
+                    _instance = new CustomLogger(sinks, programName, delayMs);
             }
 
             return _instance;
