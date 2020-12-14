@@ -1,4 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using CustomLogs.Models;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,18 +9,25 @@ namespace CustomLogs.Utils.FileSink
 {
     public interface IAsyncFileWriter
     {
-        void Start(ConcurrentQueue<string[]> logQueue, string filePath, int delayMs);
-        void WriteLog(ConcurrentQueue<string[]> logQueue, string filePath);
+        void Start(ConcurrentQueue<LogQueueItem> logQueue, IFilePathBuilder filePathBuilder, int delayMs);
+        void WriteLog();
     }
 
     internal class AsyncFileWriter : IAsyncFileWriter
     {
+        private object _padlock = new object();
+        private IFilePathBuilder _filePathBuilder;
         private bool _isStarted = false;
+        private DateTime _currentDate = default;
+        private ConcurrentQueue<LogQueueItem> _logQueue;
 
-        public void Start(ConcurrentQueue<string[]> logQueue, string filePath, int delayMs)
+        public void Start(ConcurrentQueue<LogQueueItem> logQueue, IFilePathBuilder fileePathBuilder, int delayMs)
         {
             if (_isStarted)
                 return;
+
+            _filePathBuilder = fileePathBuilder;
+            _logQueue = logQueue;
 
             Task.Run(async () =>
             {
@@ -26,7 +35,7 @@ namespace CustomLogs.Utils.FileSink
                 {
                     try
                     {
-                        WriteLog(logQueue, filePath);
+                        WriteLog();
                         await Task.Delay(delayMs);
                     }
                     finally { }
@@ -36,25 +45,48 @@ namespace CustomLogs.Utils.FileSink
             _isStarted = true;
         }
 
-        public void WriteLog(ConcurrentQueue<string[]> logQueue, string filePath)
+        public void WriteLog()
         {
-            List<string> totalLines = new List<string>();
-
-
-            while (logQueue.Count > 0)
+            lock (_padlock)
             {
-                var result = logQueue.TryDequeue(out string[] lines);
 
-                if (!result)
-                    break;
+                List<string> totalLines = new List<string>();
+                bool isFirstIteration = true;
 
-                totalLines.AddRange(lines);
+                while (_logQueue.Count > 0)
+                {
+                    if (_logQueue.TryDequeue(out LogQueueItem logItem) == false)
+                        break;
+
+                    if (isFirstIteration)
+                    {
+                        totalLines.AddRange(logItem.Lines);
+                        _currentDate = logItem.DateTime;
+                        isFirstIteration = false;
+                        continue;
+                    }
+
+                    if (_currentDate.Date == logItem.DateTime.Date)
+                    {
+                        totalLines.AddRange(logItem.Lines);
+                        continue; // it never goes pass this
+                    }
+
+                    WriteAndCleanBuffer(totalLines);
+                    totalLines.AddRange(logItem.Lines);
+                    _currentDate = logItem.DateTime;
+                }
+
+                if (totalLines.Count > 0)
+                    WriteAndCleanBuffer(totalLines);
             }
+        }
 
-            if (totalLines.Count == 0)
-                return;
-
+        private void WriteAndCleanBuffer(List<string> totalLines)
+        {
+            var filePath = _filePathBuilder.Build(_currentDate);
             File.AppendAllLines(filePath, totalLines);
+            totalLines.Clear();
         }
     }
 }
