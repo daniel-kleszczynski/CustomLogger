@@ -2,6 +2,7 @@
 using CustomLogs.Sinks;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace CustomLogs
@@ -46,7 +47,10 @@ namespace CustomLogs
                 {
                     sink.Setup(_programName, _delayMs);
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -72,7 +76,10 @@ namespace CustomLogs
                 {
                     sink.Log(model);
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -100,7 +107,10 @@ namespace CustomLogs
                 {
                     sink.LogData(model);
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -126,7 +136,10 @@ namespace CustomLogs
                 {
                     sink.LogDataSet(model);
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -157,7 +170,10 @@ namespace CustomLogs
                 {
                     sink.LogCollection(model);
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -177,7 +193,10 @@ namespace CustomLogs
                 {
                     sink.LogException(model);
                 }
-                finally { }
+                catch (Exception exp)
+                {
+                    EventLog.WriteEntry(_programName, exp.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -200,7 +219,10 @@ namespace CustomLogs
                 {
                     sink.LogError(model);
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
 
@@ -212,7 +234,10 @@ namespace CustomLogs
                 {
                     sink.Dispose();
                 }
-                finally { }
+                catch (Exception ex)
+                {
+                    EventLog.WriteEntry(_programName, ex.Message, EventLogEntryType.Error);
+                }
             }
         }
     }

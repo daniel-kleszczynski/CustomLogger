@@ -16,7 +16,7 @@ namespace CustomLogs.Sinks
 
         private ConcurrentQueue<LogQueueItem> _logQueue { get; } = new ConcurrentQueue<LogQueueItem>();
 
-        internal FileSink(string rootDirectory, 
+        internal FileSink(string rootDirectory,
                           IFilePathBuilder filePathBuilder,
                           ILogFormatter logFormatter,
                           IAsyncFileWriter fileWriter)
@@ -34,17 +34,13 @@ namespace CustomLogs.Sinks
 
         internal override void Setup(string programName, int delayMs)
         {
-            try
-            {
-                if (!Directory.Exists(_rootDirectory))
-                    return;
+            if (!Directory.Exists(_rootDirectory))
+                return;
 
-                var directoryPath = Path.Combine(_rootDirectory, programName);
-                _filePathBuilder.Init(directoryPath, programName);
+            var directoryPath = Path.Combine(_rootDirectory, programName);
+            _filePathBuilder.Init(directoryPath, programName);
 
-                Directory.CreateDirectory(directoryPath);
-            }
-            finally { }
+            Directory.CreateDirectory(directoryPath);
 
             _fileWriter.Start(_logQueue, _filePathBuilder, delayMs);
         }

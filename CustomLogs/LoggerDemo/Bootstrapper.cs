@@ -10,7 +10,6 @@ namespace LoggerDemo
         public ICustomLogger ConfigureLogger()
         {
             const string ProgramName = nameof(LoggerDemo);
-            
 
             var sinkFactory = new FileSinkFactory();
             var loggerPath = ConfigurationManager.AppSettings["loggerRootPath"];
